@@ -41,10 +41,11 @@ export const getUserById = async (req, res) => {
 export const searchUsers = async (req, res) => {
   try {
     const { query } = req.query;
-    if (!query)
-      return res
-        .status(400)
-        .json({ success: false, message: "No query provided" });
+    console.log("🔍 Incoming search query:", query);
+
+    if (!query) {
+      return res.status(400).json({ success: false, message: "No query provided" });
+    }
 
     const users = await User.find({
       $or: [
@@ -53,10 +54,13 @@ export const searchUsers = async (req, res) => {
       ],
     }).select("name email _id");
 
+    console.log("✅ Found users:", users);
+
     res.status(200).json({ success: true, users });
   } catch (err) {
-    console.error("Error searching users:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("❌ Error searching users:", err);
+    res.status(500).json({ success: false, message: "Server error", error: err.message });
   }
 };
+vv
 
