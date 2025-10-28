@@ -7,4 +7,5 @@ const router = express.Router();
 router.get("/profile", protect, getUserProfile);
 // router.get("/profile/:id", getUserProfile);
 router.get("/profile/:id", getUserById);
+router.get("/profile/search", searchUsers);
 export default router;
