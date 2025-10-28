@@ -41,11 +41,12 @@ export const getUserById = async (req, res) => {
 export const searchUsers = async (req, res) => {
   try {
     const { query } = req.query;
-    console.log("🔍 Incoming search query:", query);
 
-    if (!query) {
+    if (!query || query.trim() === "") {
       return res.status(400).json({ success: false, message: "No query provided" });
     }
+
+    console.log(`🔍 Searching users for query: "${query}"`);
 
     const users = await User.find({
       $or: [
@@ -54,12 +55,16 @@ export const searchUsers = async (req, res) => {
       ],
     }).select("name email _id");
 
-    console.log("✅ Found users:", users);
+    console.log(`✅ Found ${users.length} user(s) for query: "${query}"`);
 
-    res.status(200).json({ success: true, users });
+    res.status(200).json({ success: true, count: users.length, users });
   } catch (err) {
     console.error("❌ Error searching users:", err);
-    res.status(500).json({ success: false, message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message || "Internal Server Error",
+      stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    });
   }
 };
 
