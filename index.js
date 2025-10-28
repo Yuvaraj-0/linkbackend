@@ -10,12 +10,24 @@ import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:5173", // local React dev server
+  "https://linkb-puce.vercel.app" // deployed Vercel frontend
+];
+
 app.use(
   cors({
-    origin: "https://linkb-puce.vercel.app", // your React app
-    credentials: true, // allow cookies or tokens
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
+
 app.use(express.json());
 
 // MongoDB Connection
