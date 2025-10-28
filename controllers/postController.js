@@ -220,7 +220,7 @@ export const addComment = async (req, res) => {
 export const getComments = async (req, res) => {
     try {
       const post = await Post.findById(req.params.id)
-        .populate("comments.user", "username email"); // populate user details
+        .populate("comments.user", "name email"); // populate user details
   
       if (!post) return res.status(404).json({ message: "Post not found" });
   
