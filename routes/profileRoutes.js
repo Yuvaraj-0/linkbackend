@@ -9,9 +9,11 @@ import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/",protect, createProfile);
+// ✅ Use same pattern as frontend
+router.post("/", protect, createProfile);
 router.get("/:id", protect, getProfileById);
-router.put("/", protect, updateProfile);
-router.delete("/", protect, deleteProfile);
+router.put("/:id", protect, updateProfile);
+router.delete("/:id", protect, deleteProfile);
 
 export default router;
+
