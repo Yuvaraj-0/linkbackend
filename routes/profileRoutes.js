@@ -5,13 +5,13 @@ import {
   updateProfile,
   deleteProfile,
 } from "../controllers/profileController.js";
-import { verifyToken } from "../middleware/authMiddleware.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", verifyToken, createProfile);
-router.get("/:id", verifyToken, getProfileById);
-router.put("/", verifyToken, updateProfile);
-router.delete("/", verifyToken, deleteProfile);
+router.post("/",protect, createProfile);
+router.get("/:id", protect, getProfileById);
+router.put("/", protect, updateProfile);
+router.delete("/", protect, deleteProfile);
 
 export default router;
