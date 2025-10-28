@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 const allowedOrigins = [
   "http://localhost:5173", // local React dev server
-  "https://linkb-puce.vercel.app" // deployed Vercel frontend
+  "https://linkb-kktodbgzn-yuvaraj-0s-projects.vercel.app" // deployed Vercel frontend
 ];
 
 app.use(
