@@ -39,6 +39,7 @@ export const getUserById = async (req, res) => {
 };
 
 export const searchUsers = async (req, res) => {
+  console.log("here hitting --->",req.query)
   try {
     const { query } = req.query;
 
