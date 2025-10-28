@@ -1,47 +1,77 @@
 import Profile from "../models/Profile.js";
-import fs from "fs";
 
-// 🟢 CREATE a new profile
+// 🟢 Create Profile
 export const createProfile = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const profile = new Profile({ _id: userId, ...req.body });
-    await profile.save();
-    res.status(201).json(profile);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const { name, degree, skills, address } = req.body;
+
+    // Prevent duplicate profile for same user
+    const existing = await Profile.findOne({ user: req.user.id });
+    if (existing)
+      return res
+        .status(400)
+        .json({ success: false, message: "Profile already exists" });
+
+    const profile = await Profile.create({
+      user: req.user.id,
+      name,
+      degree,
+      skills,
+      address,
+    });
+
+    res.status(201).json({ success: true, profile });
+  } catch (error) {
+    console.error("❌ Error creating profile:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// 🟡 UPDATE existing profile (text fields only)
+// 🟣 Get Profile by User ID
+export const getProfileById = async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.params.id }).populate(
+      "user",
+      "name email"
+    );
+    if (!profile)
+      return res.status(404).json({ success: false, message: "Profile not found" });
+
+    res.json({ success: true, profile });
+  } catch (error) {
+    console.error("❌ Error fetching profile:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// 🟡 Update Profile
 export const updateProfile = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const updated = await Profile.findByIdAndUpdate(userId, req.body, { new: true });
-    if (!updated) return res.status(404).json({ message: "Profile not found" });
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const { name, degree, skills, address } = req.body;
+
+    const updated = await Profile.findOneAndUpdate(
+      { user: req.user.id },
+      { name, degree, skills, address },
+      { new: true, upsert: true } // if not exist, create new
+    );
+
+    res.json({ success: true, profile: updated });
+  } catch (error) {
+    console.error("❌ Error updating profile:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// 🔵 UPLOAD or UPDATE Avatar separately
-export const uploadAvatar = async (req, res) => {
+// 🔴 Delete Profile
+export const deleteProfile = async (req, res) => {
   try {
-    const { userId } = req.params;
-    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+    const deleted = await Profile.findOneAndDelete({ user: req.user.id });
+    if (!deleted)
+      return res.status(404).json({ success: false, message: "Profile not found" });
 
-    const profile = await Profile.findById(userId);
-    if (!profile) return res.status(404).json({ message: "Profile not found" });
-
-    // Delete old avatar if exists
-    if (profile.avatar && fs.existsSync(profile.avatar)) fs.unlinkSync(profile.avatar);
-
-    profile.avatar = req.file.path;
-    await profile.save();
-
-    res.json({ success: true, avatar: profile.avatar });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.json({ success: true, message: "Profile deleted successfully" });
+  } catch (error) {
+    console.error("❌ Error deleting profile:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
