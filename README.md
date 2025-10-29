@@ -1,4 +1,8 @@
-# linkbackend
+🧠 Social Feed App (MERN Stack)
+📋 Overview
+
+This project is a social networking application built using the MERN stack (MongoDB, Express.js, React.js, Node.js).
+
 🚀 Features
 🔐 Authentication
 
