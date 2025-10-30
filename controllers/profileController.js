@@ -49,12 +49,12 @@ export const getProfileById = async (req, res) => {
     // 🔹 Find profile linked to the user ID and populate user info
     const profile = await Profile.findOne({ user: req.params.id }).populate(
       "user",
-      "name email avatar"
+      "name email "
     );
 
     // 🔹 If profile doesn’t exist, still send basic user info
     if (!profile) {
-      const user = await User.findById(req.params.id).select("name email avatar");
+      const user = await User.findById(req.params.id).select("name email");
       if (!user)
         return res
           .status(404)
