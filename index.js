@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
-import avatarRoutes from "./routes/avatarRoutes.js";
+
 import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 
@@ -51,7 +51,6 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/user",userRoutes);
 
 
-app.use("/api/logo", avatarRoutes);
 app.use("/uploads", express.static("uploads"));
 
 const PORT = process.env.PORT || 3002;
