@@ -56,12 +56,6 @@ Integrated search bar to find users by their name or username.
 
 Real-time filtering and suggestions using frontend queries.
 
-⚙️ API Behavior (Important Clarification)
-
-There is a special rule due to current API configuration:
-
-🧩 Profile data exists only if the user has created at least one feed (post).
-If a user has not posted anything yet, their profile data will also be empty when fetched from the API.
 
 💬 Usage
 
@@ -77,7 +71,3 @@ Interact → Like, comment, and share
 
 Search Users → Find and visit others’ profiles
 
-🧑‍💻 Developer Note
-
-Due to the current API linkage between Profile and Feed, ensure that at least one feed is created per user for proper profile visibility.
-This behavior will be improved in the next backend revision.
